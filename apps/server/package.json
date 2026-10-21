@@ -1,0 +1,30 @@
+{
+  "name": "@tandem/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --clear-screen=false src/main.ts",
+    "build": "esbuild src/main.ts --bundle --platform=node --format=esm --target=node22 --sourcemap --outfile=dist/main.js --external:fastify --external:@fastify/static --external:ws --external:pg --external:prom-client --external:zod --banner:js=\"import{createRequire}from'module';const require=createRequire(import.meta.url);\"",
+    "start": "node --enable-source-maps dist/main.js",
+    "migrate": "tsx src/migrate-cli.ts",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@fastify/static": "8.0.3",
+    "@tandem/doc-model": "workspace:*",
+    "@tandem/protocol": "workspace:*",
+    "@tandem/room": "workspace:*",
+    "fastify": "5.1.0",
+    "pg": "8.13.1",
+    "prom-client": "15.1.3",
+    "ws": "8.18.0",
+    "zod": "3.23.8"
+  },
+  "devDependencies": {
+    "@tandem/sync-client": "workspace:*",
+    "@types/pg": "8.11.10",
+    "@types/ws": "8.5.13",
+    "esbuild": "0.24.0"
+  }
+}

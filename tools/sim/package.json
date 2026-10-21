@@ -1,0 +1,17 @@
+{
+  "name": "@tandem/sim",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/cli.ts",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@tandem/doc-model": "workspace:*",
+    "@tandem/protocol": "workspace:*",
+    "@tandem/room": "workspace:*",
+    "@tandem/sync-client": "workspace:*",
+    "fast-check": "3.23.1"
+  }
+}
