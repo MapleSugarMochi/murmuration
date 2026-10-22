@@ -24,14 +24,15 @@ fly auth login
 
 Fly needs a payment method on the account even for small apps.
 
-## 3. Create the app (without deploying)
+## 3. Create the app
+
+Put your app name in `deploy/fly.toml` (`app` and `ALLOWED_ORIGINS`), then:
 
 ```powershell
-fly launch --no-deploy --copy-config --config deploy/fly.toml --name tandem-<yourname> --region lhr
+fly apps create tandem-<yourname> --org personal
 ```
 
-This writes your app name into `deploy/fly.toml`. Then set the allowed origin
-there (`ALLOWED_ORIGINS = 'https://tandem-<yourname>.fly.dev'`).
+The live instance is `tandem-xuzhou` at https://tandem-xuzhou.fly.dev.
 
 ## 4. Create the database and secrets
 
@@ -41,12 +42,14 @@ fly postgres attach tandem-<yourname>-db --app tandem-<yourname>
 fly secrets set --app tandem-<yourname> SESSION_SECRET=$(-join ((1..64) | % { '{0:x}' -f (Get-Random -Max 16) }))
 ```
 
-`attach` sets `DATABASE_URL`. The server runs its migrations on start.
+`attach` creates a database user for the app and sets `DATABASE_URL`; the
+cluster's superuser password printed by `create` is not needed by the app. The
+server runs its migrations on start.
 
 ## 5. Deploy
 
 ```powershell
-fly deploy --config deploy/fly.toml
+fly deploy . --config deploy/fly.toml --dockerfile deploy/Dockerfile --remote-only --ha=false
 fly open --app tandem-<yourname>
 ```
 

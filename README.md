@@ -4,7 +4,10 @@ A real-time multiplayer vector canvas. Share a link and draw together: everyone'
 edits, cursors and selections appear live, edits made offline sync on reconnect,
 and the sync protocol is written from scratch — no Yjs, no Liveblocks.
 
-<!-- TODO: demo GIF (two windows editing at once) and the live URL once deployed. -->
+**Live demo: https://tandem-xuzhou.fly.dev** — create a document, then open the
+share link in a second window.
+
+<!-- TODO: demo GIF (two windows editing at once). -->
 
 ## Highlights
 

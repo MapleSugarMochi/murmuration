@@ -1,6 +1,5 @@
 # Fly.io deployment, run from the repository root. See docs/deploy.md.
-# `app` must be globally unique: `fly launch` below writes your chosen name here.
-app = 'tandem-change-me'
+app = 'tandem-xuzhou'
 primary_region = 'lhr'
 
 [build]
@@ -10,8 +9,7 @@ primary_region = 'lhr'
   PORT = '8080'
   # Metrics stay on a private port that Fly scrapes; the public port has none.
   METRICS_PORT = '9091'
-  # Set to your app's origin once the name is chosen, e.g.
-  # ALLOWED_ORIGINS = 'https://tandem-yourname.fly.dev'
+  ALLOWED_ORIGINS = 'https://tandem-xuzhou.fly.dev'
 
 [http_service]
   internal_port = 8080

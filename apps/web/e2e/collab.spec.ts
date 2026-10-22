@@ -104,20 +104,24 @@ test('edits made offline sync after reconnecting', async ({ browser, page }) => 
   const ada = await open(browser, doc, 'edit', 'Ada');
   const bob = await open(browser, doc, 'edit', 'Bob');
 
-  await ada.context().setOffline(true);
-  // Emulated offline mode keeps open sockets alive, so drop ours explicitly.
-  await ada.evaluate(() =>
-    (
-      window as unknown as { __tandemConnection: { simulateDrop(): void } }
-    ).__tandemConnection.simulateDrop(),
-  );
+  // Browser offline emulation ignores localhost in CI's Chromium, so cut the
+  // connection through the app's own test hook.
+  const setOffline = (offline: boolean) =>
+    ada.evaluate(
+      (o) =>
+        (
+          window as unknown as { __tandemConnection: { simulateOffline(o: boolean): void } }
+        ).__tandemConnection.simulateOffline(o),
+      offline,
+    );
+  await setOffline(true);
   await expect(ada.getByTestId('status')).toContainText(/Offline|Reconnecting/);
   await drawRect(ada, [150, 150], [250, 250]);
   await drawRect(ada, [300, 150], [400, 250]);
   await expect(ada.getByTestId('status')).toContainText('unsynced');
   expect(await nodes(bob)).toHaveLength(0);
 
-  await ada.context().setOffline(false);
+  await setOffline(false);
   await expect(ada.getByTestId('status')).toContainText('Saved', { timeout: 15_000 });
   await expect.poll(async () => (await nodes(bob)).length).toBe(2);
 });

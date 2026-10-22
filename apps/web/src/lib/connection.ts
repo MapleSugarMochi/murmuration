@@ -19,6 +19,7 @@ export class Connection {
   private timer: number | null = null;
   private pingTimer: number | null = null;
   private stopped = false;
+  private offline = false;
   fatal: { code: ErrorCode; message: string } | null = null;
   onFatal: ((error: { code: ErrorCode; message: string }) => void) | null = null;
 
@@ -50,9 +51,15 @@ export class Connection {
     this.ws = null;
   }
 
-  /** Drops the socket as a network failure would; reconnection follows. */
-  simulateDrop(): void {
-    this.ws?.close(4001, 'simulated drop');
+  /**
+   * Test hook: `true` drops the socket and holds off reconnecting, as a
+   * network outage would; `false` lets it reconnect at once. Browser offline
+   * emulation is not reliable for this (it ignores localhost in Chromium).
+   */
+  simulateOffline(offline: boolean): void {
+    this.offline = offline;
+    if (offline) this.ws?.close(4001, 'simulated outage');
+    else this.reconnectNow();
   }
 
   private readonly reconnectNow = () => {
@@ -64,6 +71,10 @@ export class Connection {
 
   private open(): void {
     this.timer = null;
+    if (this.offline) {
+      this.timer = window.setTimeout(() => this.open(), 500);
+      return;
+    }
     const ws = new WebSocket(this.url);
     this.ws = ws;
     ws.onopen = () => {
