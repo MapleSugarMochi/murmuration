@@ -4,9 +4,16 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    # Major upgrades (zod 4, React 19, ...) change APIs and need a planned
+    # migration, not an automatic PR.
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
     groups:
       dev-dependencies:
         dependency-type: development
+      production-dependencies:
+        dependency-type: production
   - package-ecosystem: github-actions
     directory: /
     schedule:
