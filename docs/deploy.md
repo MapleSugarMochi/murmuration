@@ -32,7 +32,7 @@ Put your app name in `deploy/fly.toml` (`app` and `ALLOWED_ORIGINS`), then:
 fly apps create murmuration-<yourname> --org personal
 ```
 
-The live instance is `murmuration-xuzhou` at https://murmuration-xuzhou.fly.dev.
+The live instance is `murmuration-xd` at https://murmuration-xd.fly.dev.
 
 ## 4. Create the database and secrets
 

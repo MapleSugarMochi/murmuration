@@ -4,7 +4,7 @@ A real-time multiplayer vector canvas. Share a link and draw together: everyone'
 edits, cursors and selections appear live, edits made offline sync on reconnect,
 and the sync protocol is written from scratch — no Yjs, no Liveblocks.
 
-**Live demo: https://murmuration-xuzhou.fly.dev** — create a document, then open the
+**Live demo: https://murmuration-xd.fly.dev** — create a document, then open the
 share link in a second window.
 
 ![Two people editing one document: Ada (left) draws a frame and a blue circle,
