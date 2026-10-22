@@ -1,9 +1,6 @@
-# Fly.io deployment. Before the first deploy:
-#   fly launch --no-deploy --copy-config --config deploy/fly.toml
-#   fly postgres create && fly postgres attach <db-app>   # sets DATABASE_URL
-#   fly secrets set SESSION_SECRET=$(openssl rand -hex 32)
-# Then: fly deploy --config deploy/fly.toml
-app = 'tandem'
+# Fly.io deployment, run from the repository root. See docs/deploy.md.
+# `app` must be globally unique: `fly launch` below writes your chosen name here.
+app = 'tandem-change-me'
 primary_region = 'lhr'
 
 [build]
@@ -11,6 +8,10 @@ primary_region = 'lhr'
 
 [env]
   PORT = '8080'
+  # Metrics stay on a private port that Fly scrapes; the public port has none.
+  METRICS_PORT = '9091'
+  # Set to your app's origin once the name is chosen, e.g.
+  # ALLOWED_ORIGINS = 'https://tandem-yourname.fly.dev'
 
 [http_service]
   internal_port = 8080
@@ -36,5 +37,5 @@ primary_region = 'lhr'
   memory = '1gb'
 
 [metrics]
-  port = 8080
+  port = 9091
   path = '/metrics'

@@ -93,6 +93,7 @@ pnpm loadtest --clients 50 --rate 20 --seconds 30
 - [Design](docs/design.md): the sync protocol and its trade-offs
 - [Protocol](docs/protocol.md): message reference and sequences
 - [Benchmarks](docs/benchmarks.md)
+- [Deploying](docs/deploy.md): GitHub and Fly.io, step by step
 - [Threat model](docs/threat-model.md)
 - [Architecture decisions](docs/adr/)
 - [How this was built with AI tools](docs/ai-workflow.md)

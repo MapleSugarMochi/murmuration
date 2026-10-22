@@ -3,7 +3,9 @@
 
 FROM node:22.11-alpine AS build
 WORKDIR /app
-RUN corepack enable
+# Not corepack: the one bundled with this Node release can no longer verify
+# npm's rotated signing keys.
+RUN npm install -g pnpm@9.15.0
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY apps/server/package.json apps/server/
 COPY apps/web/package.json apps/web/

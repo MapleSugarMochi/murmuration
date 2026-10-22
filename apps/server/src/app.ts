@@ -1,4 +1,5 @@
 import { existsSync } from 'node:fs';
+import { createServer, type Server } from 'node:http';
 import { resolve } from 'node:path';
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import fastifyStatic from '@fastify/static';
@@ -160,10 +161,25 @@ export async function buildApp(config: Config, store: Store): Promise<App> {
     return { ok: true };
   });
 
-  fastify.get('/metrics', async (_req, reply) => {
-    reply.header('content-type', metrics.registry.contentType);
-    return metrics.registry.metrics();
-  });
+  let metricsServer: Server | null = null;
+  if (config.metricsPort === null) {
+    fastify.get('/metrics', async (_req, reply) => {
+      reply.header('content-type', metrics.registry.contentType);
+      return metrics.registry.metrics();
+    });
+  } else {
+    metricsServer = createServer((req, res) => {
+      if (req.url !== '/metrics') {
+        res.writeHead(404).end();
+        return;
+      }
+      metrics.registry.metrics().then(
+        (body) => res.writeHead(200, { 'content-type': metrics.registry.contentType }).end(body),
+        () => res.writeHead(500).end(),
+      );
+    });
+    metricsServer.listen(config.metricsPort, config.host);
+  }
 
   if (config.publicDir && existsSync(config.publicDir)) {
     const root = resolve(config.publicDir);
@@ -184,6 +200,7 @@ export async function buildApp(config: Config, store: Store): Promise<App> {
       await rooms.shutdown();
       await sockets.close();
       await fastify.close();
+      metricsServer?.close();
       await store.close();
     },
   };
