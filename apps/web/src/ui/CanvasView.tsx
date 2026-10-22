@@ -95,7 +95,12 @@ export function CanvasView({ editor }: { editor: Editor }) {
     editor.pointerDown(input(e, e.currentTarget));
   };
 
-  const chatPos = editor.chat.open ? editor.toScreen(editor.pointerWorld) : null;
+  const pointer = editor.chat.open ? editor.toScreen(editor.pointerWorld) : null;
+  // Keep the chat input inside the canvas, beside the pointer.
+  const chatPos = pointer && {
+    x: Math.max(4, Math.min(pointer.x + 12, editor.size.width - 228)),
+    y: Math.max(4, Math.min(pointer.y + 14, editor.size.height - 36)),
+  };
 
   return (
     <div className="canvas-wrap" ref={wrapRef}>
@@ -124,10 +129,11 @@ export function CanvasView({ editor }: { editor: Editor }) {
       {chatPos && (
         <input
           className="chat-input"
-          autoFocus
+          // Plain autoFocus would scroll the canvas container to reveal it.
+          ref={(el) => el?.focus({ preventScroll: true })}
           placeholder="Say something"
           maxLength={140}
-          style={{ left: chatPos.x + 12, top: chatPos.y + 14, background: editor.sync.color }}
+          style={{ left: chatPos.x, top: chatPos.y, background: editor.sync.color }}
           value={editor.chat.text}
           onChange={(e) => editor.setChat(e.target.value)}
           onKeyDown={(e) => {

@@ -96,7 +96,9 @@ textarea {
 
 .canvas-wrap {
   position: relative;
-  overflow: hidden;
+  /* clip, not hidden: a hidden overflow can still be scrolled by focusing an
+     overlay near the edge, which would shift the whole canvas. */
+  overflow: clip;
   background: var(--canvas);
   min-width: 0;
 }

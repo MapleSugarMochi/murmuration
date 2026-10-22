@@ -179,3 +179,36 @@ test('a layer deleted mid-drag cancels the drag gracefully', async ({ browser, p
   await ada.mouse.up();
   await expect.poll(async () => (await nodes(ada)).length).toBe(0);
 });
+
+test('cursor chat near the edge reaches others without shifting the canvas', async ({
+  browser,
+  page,
+}) => {
+  const doc = await newDoc(page);
+  const ada = await open(browser, doc, 'edit', 'Ada');
+  const bob = await open(browser, doc, 'edit', 'Bob');
+  const box = (await ada.getByTestId('canvas').boundingBox())!;
+  // Near the right edge, clear of the zoom badge in the bottom-right corner.
+  await ada.mouse.move(box.x + box.width - 30, box.y + box.height - 80);
+  const before = await ada.evaluate(() =>
+    JSON.stringify((window as unknown as { __tandem: { view: unknown } }).__tandem.view),
+  );
+  await ada.keyboard.press('/');
+  await ada.keyboard.type('Hello!');
+  const peerChat = () =>
+    bob.evaluate(() => {
+      const editor = (
+        window as unknown as {
+          __tandem: { sync: { peers: Map<string, { presence: { chat: string | null } }> } };
+        }
+      ).__tandem;
+      return [...editor.sync.peers.values()][0]?.presence.chat ?? null;
+    });
+  await expect.poll(peerChat).toBe('Hello!');
+  expect(await ada.locator('.canvas-wrap').evaluate((el) => el.scrollLeft + el.scrollTop)).toBe(0);
+  expect(
+    await ada.evaluate(() =>
+      JSON.stringify((window as unknown as { __tandem: { view: unknown } }).__tandem.view),
+    ),
+  ).toBe(before);
+});

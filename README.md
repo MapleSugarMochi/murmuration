@@ -7,7 +7,12 @@ and the sync protocol is written from scratch — no Yjs, no Liveblocks.
 **Live demo: https://tandem-xuzhou.fly.dev** — create a document, then open the
 share link in a second window.
 
-<!-- TODO: demo GIF (two windows editing at once). -->
+![Two people editing one document: Ada (left) draws a frame and a blue circle,
+Bob (right) adds an orange rectangle and a note, and each sees the other's
+cursor, selection and cursor chat live](docs/demo.gif)
+
+<sub>Recorded by a script (`DEMO=1 pnpm e2e demo`): two browser windows driven by
+Playwright against the real server.</sub>
 
 ## Highlights
 
