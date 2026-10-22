@@ -40,6 +40,8 @@ const MIGRATIONS: Array<{ id: number; name: string; sql: string }> = [
 ];
 
 const MIGRATION_LOCK = 742_031;
+/** Concurrent append statements; the rest queue and merge. */
+const MAX_WRITES_IN_FLIGHT = 4;
 
 interface DocRow {
   id: string;
@@ -153,22 +155,66 @@ export class PgStore implements Store {
     };
   }
 
-  async appendBatches(id: string, batches: CommittedBatch[]): Promise<void> {
-    if (batches.length === 0) return;
-    // One statement, so the group commit is atomic. The primary key rejects
-    // a second writer that tries to reuse a seq.
-    const rows = batches.map((b) => ({
-      seq: b.seq,
-      client_id: b.clientId,
-      batch_id: b.batchId,
-      ops: b.ops,
-    }));
-    await this.pool.query(
-      `INSERT INTO ops (doc_id, seq, client_id, batch_id, ops)
-       SELECT $1, x.seq, x.client_id, x.batch_id, x.ops
-       FROM jsonb_to_recordset($2::jsonb) AS x(seq bigint, client_id text, batch_id bigint, ops jsonb)`,
-      [id, JSON.stringify(rows)],
-    );
+  /**
+   * Appends go through a store-wide writer that merges pending appends from
+   * every document into one INSERT, with at most a few statements in flight.
+   * With many active documents this turns thousands of tiny commits per
+   * second, all competing for pool connections, into a handful of larger
+   * ones. A room never has two appends outstanding, so per-document order
+   * holds.
+   */
+  appendBatches(id: string, batches: CommittedBatch[]): Promise<void> {
+    if (batches.length === 0) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      for (const b of batches) {
+        this.pendingRows.push({
+          doc_id: id,
+          seq: b.seq,
+          client_id: b.clientId,
+          batch_id: b.batchId,
+          ops: b.ops,
+        });
+      }
+      this.pendingWaiters.push({ resolve, reject });
+      this.writeNext();
+    });
+  }
+
+  private pendingRows: Array<{
+    doc_id: string;
+    seq: number;
+    client_id: string;
+    batch_id: number;
+    ops: CommittedBatch['ops'];
+  }> = [];
+  private pendingWaiters: Array<{ resolve: () => void; reject: (err: unknown) => void }> = [];
+  private writesInFlight = 0;
+
+  private writeNext(): void {
+    if (this.writesInFlight >= MAX_WRITES_IN_FLIGHT || this.pendingRows.length === 0) return;
+    const rows = this.pendingRows;
+    const waiters = this.pendingWaiters;
+    this.pendingRows = [];
+    this.pendingWaiters = [];
+    this.writesInFlight++;
+    // One statement, so each write is atomic. The primary key rejects a
+    // second writer that tries to reuse a seq.
+    this.pool
+      .query(
+        `INSERT INTO ops (doc_id, seq, client_id, batch_id, ops)
+         SELECT x.doc_id, x.seq, x.client_id, x.batch_id, x.ops
+         FROM jsonb_to_recordset($1::jsonb)
+           AS x(doc_id text, seq bigint, client_id text, batch_id bigint, ops jsonb)`,
+        [JSON.stringify(rows)],
+      )
+      .then(
+        () => waiters.forEach((w) => w.resolve()),
+        (err: unknown) => waiters.forEach((w) => w.reject(err)),
+      )
+      .finally(() => {
+        this.writesInFlight--;
+        this.writeNext();
+      });
   }
 
   async saveSnapshot(id: string, snapshot: RoomSnapshot): Promise<void> {

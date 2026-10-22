@@ -61,7 +61,10 @@ export async function buildApp(config: Config, store: Store): Promise<App> {
     joinsPerSecondPerIp: config.joinsPerSecondPerIp,
   });
   fastify.server.on('upgrade', sockets.handleUpgrade);
-  const createLimiter = new KeyedLimiter(0.2, 10);
+  const createLimiter = new KeyedLimiter(
+    config.docsPerMinutePerIp / 60,
+    Math.max(10, config.docsPerMinutePerIp / 6),
+  );
   let shuttingDown = false;
 
   fastify.setErrorHandler((err, _req, reply) => {

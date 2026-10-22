@@ -21,6 +21,7 @@ export interface Config {
   /** Abuse limits; raise them for load tests run from one machine. */
   maxConnectionsPerIp: number;
   joinsPerSecondPerIp: number;
+  docsPerMinutePerIp: number;
   /**
    * Serve /metrics on this separate port instead of the public one, so the
    * internet cannot read them (Fly scrapes the private port).
@@ -50,6 +51,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     logLevel: env.LOG_LEVEL ?? (production ? 'info' : 'debug'),
     maxConnectionsPerIp: Number(env.MAX_CONNECTIONS_PER_IP ?? 50),
     joinsPerSecondPerIp: Number(env.JOINS_PER_SECOND_PER_IP ?? 5),
+    docsPerMinutePerIp: Number(env.DOCS_PER_MINUTE_PER_IP ?? 12),
     metricsPort: env.METRICS_PORT ? Number(env.METRICS_PORT) : null,
   };
 }

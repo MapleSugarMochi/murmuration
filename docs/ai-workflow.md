@@ -41,6 +41,20 @@ This page records honestly what that looked like.
   `localhost` went over IPv6 through Docker Desktop's port forwarding. Switching
   the address took p99 from 243 ms to 76 ms; no code change was needed.
 
+- **An "optimisation" that made things slower.** A cache for packed pixel
+  colours turned the 100,000-shape frame from 18 ms into 25 ms: with 100,000
+  distinct colours a bounded cache only misses and evicts. Measuring each change
+  separately caught it; the cache was removed.
+- **Blaming the wrong layer.** 2,000 connections across 100 documents showed
+  ~220 ms latency. Halving the message rate changed nothing, an in-memory server
+  gave the same numbers, and splitting the load generator over four processes
+  halved it: the bottleneck was mostly the test harness, not the server. The
+  run did expose real pool contention (mean commit 93 ms), fixed by merging
+  appends across documents into one INSERT (33 ms).
+- **A test that proves it can fail.** The `kill -9` crash test was checked by
+  turning database writes into a no-op; it then reported all 200 acknowledged
+  shapes missing.
+
 ## Practices that worked
 
 - Write the invariants first (`assertInvariants`), then check them after every

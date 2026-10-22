@@ -75,6 +75,23 @@ function bot(
   });
 }
 
+/** Reads the server's Prometheus metrics, when served on the main port. */
+async function serverMetrics(): Promise<Record<string, number> | null> {
+  try {
+    const res = await fetch(`${base}/metrics`);
+    const text = await res.text();
+    if (!res.ok || !text.includes('tandem_')) return null;
+    const out: Record<string, number> = {};
+    for (const line of text.split('\n')) {
+      const m = /^([a-z_]+) ([0-9.e+-]+)$/.exec(line);
+      if (m) out[m[1]!] = Number(m[2]);
+    }
+    return out;
+  } catch {
+    return null;
+  }
+}
+
 function pct(xs: number[], p: number): number {
   if (xs.length === 0) return NaN;
   const s = [...xs].sort((a, b) => a - b);
@@ -84,11 +101,18 @@ function pct(xs: number[], p: number): number {
 async function main() {
   const docs = await Promise.all(Array.from({ length: docCount }, createDoc));
   console.log(`docs: ${docCount}, clients: ${clients}, ${rate} moves/s each, ${seconds}s`);
-  const bots = [];
-  for (let i = 0; i < clients; i++) {
-    const doc = docs[i % docs.length]!;
-    bots.push(await bot(doc.id, doc.editToken, i));
+  const bots: Array<{ sync: SyncClient; ws: WebSocket }> = [];
+  const connectStart = performance.now();
+  // Connect in parallel waves; one at a time is far too slow for thousands.
+  for (let i = 0; i < clients; i += 50) {
+    const wave = [];
+    for (let j = i; j < Math.min(clients, i + 50); j++) {
+      const doc = docs[j % docs.length]!;
+      wave.push(bot(doc.id, doc.editToken, j));
+    }
+    bots.push(...(await Promise.all(wave)));
   }
+  const connectSeconds = (performance.now() - connectStart) / 1000;
   const ids = bots.map(({ sync }, i) => {
     const id = sync.newNodeId();
     sync.apply([
@@ -112,6 +136,7 @@ async function main() {
     lastTick = now;
   }, 100);
 
+  const before = await serverMetrics();
   const started = Date.now();
   const timers = bots.map(({ sync }, i) =>
     setInterval(() => {
@@ -130,6 +155,7 @@ async function main() {
   for (const t of timers) clearInterval(t);
   clearInterval(lagTimer);
   const elapsed = (Date.now() - started) / 1000;
+  const during = await serverMetrics();
   await new Promise((r) => setTimeout(r, 1000));
 
   const pending = bots.reduce((n, b) => n + b.sync.pendingOpCount, 0);
@@ -147,6 +173,31 @@ async function main() {
     rejected,
     pendingAfterRun: pending,
     botEventLoopMaxLagMs: Math.round(maxLag),
+    connectSeconds: Math.round(connectSeconds * 10) / 10,
+    server:
+      during && before
+        ? {
+            connections: during.tandem_connections,
+            committedOpsPerSecond: Math.round(
+              ((during.tandem_ops_applied_total ?? 0) - (before.tandem_ops_applied_total ?? 0)) /
+                elapsed,
+            ),
+            residentMemoryMB: Math.round((during.process_resident_memory_bytes ?? 0) / 2 ** 20),
+            heapUsedMB: Math.round((during.nodejs_heap_size_used_bytes ?? 0) / 2 ** 20),
+            eventLoopLagP99Ms: Math.round((during.nodejs_eventloop_lag_p99_seconds ?? 0) * 1000),
+            meanPersistMs:
+              Math.round(
+                (((during.tandem_persist_seconds_sum ?? 0) -
+                  (before.tandem_persist_seconds_sum ?? 0)) /
+                  Math.max(
+                    1,
+                    (during.tandem_persist_seconds_count ?? 0) -
+                      (before.tandem_persist_seconds_count ?? 0),
+                  )) *
+                  10000,
+              ) / 10,
+          }
+        : 'metrics unavailable (METRICS_PORT set?)',
   };
   console.log(JSON.stringify(report, null, 2));
   for (const { ws } of bots) ws.close();

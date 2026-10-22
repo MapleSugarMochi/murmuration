@@ -52,6 +52,17 @@ export interface HitOptions {
   exclude?: ReadonlySet<NodeId>;
 }
 
+export interface DisplayEntry {
+  id: NodeId;
+  props: NodeProps;
+  geom: NodeGeometry;
+  /**
+   * For a clipping frame with children: the list index just past its
+   * subtree, where the clip ends. Otherwise -1.
+   */
+  clipEnd: number;
+}
+
 /**
  * Derived, render-oriented view of a Document: world transforms, world
  * bounds, paint order and a quadtree for hit-testing. Updated incrementally
@@ -64,6 +75,7 @@ export class Scene {
   private readonly tree = new QuadTree<NodeId>();
   private order = new Map<NodeId, number>();
   private orderDirty = true;
+  private display: { version: number; list: DisplayEntry[] } | null = null;
   /** Bumped on every update, so views can cache per version. */
   version = 0;
 
@@ -123,6 +135,30 @@ export class Scene {
 
   geometry(id: NodeId): NodeGeometry | undefined {
     return this.geoms.get(id);
+  }
+
+  /**
+   * Visible nodes in paint order, flattened for the renderer and rebuilt
+   * only when the document changes, so panning and zooming never walk the
+   * tree. A clipping frame with children records where its subtree ends.
+   */
+  displayList(): readonly DisplayEntry[] {
+    if (this.display?.version === this.version) return this.display.list;
+    const list: DisplayEntry[] = [];
+    const visit = (id: NodeId) => {
+      const props = this.doc.get(id);
+      const geom = this.geoms.get(id);
+      if (!props || !geom || !props.visible) return;
+      const kids = this.doc.childrenOf(id);
+      const entry: DisplayEntry = { id, props, geom, clipEnd: -1 };
+      list.push(entry);
+      for (const c of kids) visit(c);
+      if (props.type === 'frame' && props.clipContent && kids.length > 0)
+        entry.clipEnd = list.length;
+    };
+    for (const id of this.doc.childrenOf(ROOT_ID)) visit(id);
+    this.display = { version: this.version, list };
+    return list;
   }
 
   /** Paint order: higher draws later (on top). */

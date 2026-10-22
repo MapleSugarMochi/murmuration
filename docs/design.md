@@ -50,7 +50,10 @@ Each client holds two documents:
 - **display**: confirmed with every pending local batch replayed on top.
 
 Local edits apply to display at once (optimistic), join an open batch, and are
-flushed every animation frame. When the server acks a batch it moves into
+flushed at most every 40 ms: the first edit after a pause goes out at once,
+and during a drag each window carries only the latest values. That keeps a drag
+under 5 KB/s of upload, at the cost of up to 40 ms of extra latency for others
+(docs/benchmarks.md, PF-08). When the server acks a batch it moves into
 confirmed. Remote ops apply to confirmed, then display is rebuilt by replaying
 pending batches. Because client and server share the same deterministic
 `applyBatch`, display equals confirmed — and equals the server — once nothing is

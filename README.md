@@ -19,9 +19,11 @@ share link in a second window.
   through random interleavings, dropped connections and server crashes, and
   checks every replica ends identical. 10,000 seeds run nightly.
 - **Durable by construction.** A change is acknowledged only after it is in
-  Postgres; a crash loses nothing that was acknowledged.
-- **Fast canvas.** Canvas 2D renderer with a quadtree, viewport culling and level
-  of detail: 10,000 shapes at a 4.6 ms median draw time.
+  Postgres. A test hard-kills the server mid-write and checks nothing
+  acknowledged is lost.
+- **Fast canvas.** Canvas 2D renderer with a cached display list, device-space
+  fast paths and a pixel layer for small shapes: 100,000 shapes at 60 fps while
+  panning and zooming.
 
 |             |                                                                                                                                                         |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -36,13 +38,17 @@ share link in a second window.
 Measured on an Intel i5-14400F, 16 GB RAM; details and method in
 [docs/benchmarks.md](docs/benchmarks.md).
 
-| What                                                   | Result                                                  |
-| ------------------------------------------------------ | ------------------------------------------------------- |
-| Sync latency, 50 editors × 20 moves/s, Postgres-backed | p50 46 ms, p99 76 ms (acked only after commit)          |
-| Deliveries in a 15 s load test                         | 1.23 million, 0 rejected, 0 left pending                |
-| Draw time, 10,000 shapes while panning and zooming     | p50 4.6 ms, p95 13.7 ms                                 |
-| Hit test among 10,000 shapes                           | 0.005 ms                                                |
-| Convergence simulator                                  | 2,000 seeds × 400 actions locally; 10,000 nightly in CI |
+| What                                                   | Result                                         |
+| ------------------------------------------------------ | ---------------------------------------------- |
+| Sync latency, 50 editors × 20 moves/s, Postgres-backed | p50 46 ms, p99 76 ms (acked only after commit) |
+| Sustained durable writes to one document               | 2,208 ops/s                                    |
+| 2,000 connections across 100 documents                 | 269 MB server memory                           |
+| Frame interval, 10,000 / 100,000 shapes                | p95 8.5 ms / 16.8 ms (pan and zoom)            |
+| Open a 10,000-shape document                           | 220 ms                                         |
+| Upload while dragging a shape                          | 4.4 KB/s                                       |
+| `kill -9` during writes                                | 0 acknowledged edits lost                      |
+| Convergence simulator                                  | 10,000 random seeds, all converged             |
+| Test coverage, shared packages                         | 93.7% lines                                    |
 
 ## Architecture
 

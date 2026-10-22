@@ -72,10 +72,6 @@ export function rotate(deg: number): Mat {
   return { a: cos, b: sin, c: -sin, d: cos, e: 0, f: 0 };
 }
 
-export function scale(s: number): Mat {
-  return { a: s, b: 0, c: 0, d: s, e: 0, f: 0 };
-}
-
 /** Rotation in degrees encoded in a rigid matrix. */
 export function rotationOf(m: Mat): number {
   return (Math.atan2(m.b, m.a) * 180) / Math.PI;
@@ -90,14 +86,6 @@ export function localMatrix(p: Pick<NodeProps, 'x' | 'y' | 'width' | 'height' | 
   const cx = p.width / 2;
   const cy = p.height / 2;
   return multiply(translate(p.x + cx, p.y + cy), multiply(rotate(p.rotation), translate(-cx, -cy)));
-}
-
-/**
- * Inverse of localMatrix: the x/y that place a box of the given size with
- * its centre at `center` (in parent coordinates).
- */
-export function positionForCenter(center: Vec, width: number, height: number): Vec {
-  return { x: center.x - width / 2, y: center.y - height / 2 };
 }
 
 export function corners(m: Mat, w: number, h: number): Vec[] {

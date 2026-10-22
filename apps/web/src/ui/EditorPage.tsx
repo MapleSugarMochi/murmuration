@@ -20,16 +20,20 @@ function guestName(): string {
   return name;
 }
 
-/** Flush local ops on the next frame, or after 50 ms if frames are paused. */
+/**
+ * At most one batch per 40 ms (25 Hz). The first edit after a pause goes out
+ * at once; during a drag, set ops coalesce within each window, which keeps
+ * upload under 5 KB/s (PF-08) at the cost of up to 40 ms extra latency.
+ */
+const MIN_FLUSH_INTERVAL_MS = 40;
+let lastFlushAt = 0;
+
 function scheduleFlush(flush: () => void): void {
-  let done = false;
-  const run = () => {
-    if (done) return;
-    done = true;
+  const wait = Math.max(0, lastFlushAt + MIN_FLUSH_INTERVAL_MS - performance.now());
+  setTimeout(() => {
+    lastFlushAt = performance.now();
     flush();
-  };
-  requestAnimationFrame(run);
-  setTimeout(run, 50);
+  }, wait);
 }
 
 function isTyping(target: EventTarget | null): boolean {

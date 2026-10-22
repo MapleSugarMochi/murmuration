@@ -4,6 +4,7 @@ import { Scene, drawScene, type View } from '@tandem/renderer';
 
 export interface BenchResult {
   shapes: number;
+  mode: 'mixed' | 'out';
   frames: number;
   frameMs: { p50: number; p95: number; p99: number };
   drawMs: { p50: number; p95: number; p99: number };
@@ -37,6 +38,7 @@ export function BenchPage() {
   const [result, setResult] = useState<BenchResult | null>(null);
   const n = Number(new URLSearchParams(location.search).get('n') ?? 10_000);
   const seconds = Number(new URLSearchParams(location.search).get('s') ?? 10);
+  const mode = new URLSearchParams(location.search).get('mode') === 'out' ? 'out' : 'mixed';
 
   useEffect(() => {
     const canvas = ref.current!;
@@ -90,10 +92,13 @@ export function BenchPage() {
     let raf = 0;
     const tick = (now: number) => {
       const t = (now - start) / 1000;
-      // Zoom between "everything" and close-up while panning in a circle.
-      const zoom = (Math.min(width, height) / extent) * (1.2 + 3 * (0.5 + 0.5 * Math.sin(t * 0.8)));
-      const cx = extent / 2 + Math.cos(t * 0.6) * extent * 0.3;
-      const cy = extent / 2 + Math.sin(t * 0.6) * extent * 0.3;
+      // mixed: zoom between "everything" and close-up while panning in a
+      // circle. out: the worst case — every shape on screen, panning slowly.
+      const fit = Math.min(width, height) / extent;
+      const zoom = mode === 'out' ? fit * 0.95 : fit * (1.2 + 3 * (0.5 + 0.5 * Math.sin(t * 0.8)));
+      const orbit = mode === 'out' ? 0.02 : 0.3;
+      const cx = extent / 2 + Math.cos(t * 0.6) * extent * orbit;
+      const cy = extent / 2 + Math.sin(t * 0.6) * extent * orbit;
       const view: View = { x: cx - width / 2 / zoom, y: cy - height / 2 / zoom, zoom };
       const d0 = performance.now();
       drawScene(ctx, doc, scene, view, { dpr, width, height, background: '#f5f5f5' });
@@ -105,6 +110,7 @@ export function BenchPage() {
       } else {
         const res: BenchResult = {
           shapes: n,
+          mode,
           frames: frameTimes.length,
           frameMs: { p50: pct(frameTimes, 50), p95: pct(frameTimes, 95), p99: pct(frameTimes, 99) },
           drawMs: { p50: pct(drawTimes, 50), p95: pct(drawTimes, 95), p99: pct(drawTimes, 99) },
@@ -117,7 +123,7 @@ export function BenchPage() {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [n, seconds]);
+  }, [n, seconds, mode]);
 
   return (
     <div className="bench">
