@@ -57,6 +57,10 @@ forwarding delays multi-packet requests (Postgres's extended query protocol).
 invariants checked after every action) converged on all 2,000 seeds in 125 s.
 CI runs 500 property-based cases per change and 10,000 seeds nightly.
 
+On 2026-10-22, [CI run 16](https://github.com/MapleSugarMochi/tandem/actions/runs/39761378048)
+ran seeds 16,000–25,999 (400 actions each, invariants checked at the end of each
+run): all 10,000 converged, committing 299,889 batches in 91 s.
+
 ## Reproduce
 
 ```bash
