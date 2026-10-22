@@ -35,6 +35,12 @@ This page records honestly what that looked like.
 - **Strict CSP vs. test tooling.** Playwright's `waitForFunction` needs `eval`,
   which the CSP blocks — the test changed, not the CSP.
 
+- **A 40 ms mystery in the Postgres load test.** Group commits averaged 47 ms
+  although a durable insert takes 0.6 ms. Timing queries from Node showed
+  parameterised queries via `localhost` took 44 ms but 0.5 ms via `127.0.0.1`:
+  `localhost` went over IPv6 through Docker Desktop's port forwarding. Switching
+  the address took p99 from 243 ms to 76 ms; no code change was needed.
+
 ## Practices that worked
 
 - Write the invariants first (`assertInvariants`), then check them after every

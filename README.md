@@ -33,13 +33,13 @@ and the sync protocol is written from scratch — no Yjs, no Liveblocks.
 Measured on an Intel i5-14400F, 16 GB RAM; details and method in
 [docs/benchmarks.md](docs/benchmarks.md).
 
-| What                                                  | Result                                                  |
-| ----------------------------------------------------- | ------------------------------------------------------- |
-| Sync latency, 50 editors × 20 moves/s on one document | p50 40 ms, p99 66 ms                                    |
-| Deliveries in a 15 s load test                        | 1.11 million, 0 rejected, 0 left pending                |
-| Draw time, 10,000 shapes while panning and zooming    | p50 4.6 ms, p95 13.7 ms                                 |
-| Hit test among 10,000 shapes                          | 0.005 ms                                                |
-| Convergence simulator                                 | 2,000 seeds × 400 actions locally; 10,000 nightly in CI |
+| What                                                   | Result                                                  |
+| ------------------------------------------------------ | ------------------------------------------------------- |
+| Sync latency, 50 editors × 20 moves/s, Postgres-backed | p50 46 ms, p99 76 ms (acked only after commit)          |
+| Deliveries in a 15 s load test                         | 1.23 million, 0 rejected, 0 left pending                |
+| Draw time, 10,000 shapes while panning and zooming     | p50 4.6 ms, p95 13.7 ms                                 |
+| Hit test among 10,000 shapes                           | 0.005 ms                                                |
+| Convergence simulator                                  | 2,000 seeds × 400 actions locally; 10,000 nightly in CI |
 
 ## Architecture
 

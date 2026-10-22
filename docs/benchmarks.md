@@ -25,23 +25,31 @@ one path, and raise the level-of-detail threshold.
 
 ## Sync under load (PF-05 to PF-07)
 
-`pnpm loadtest --clients 50 --rate 20 --seconds 15` against an in-memory
-server (`MAX_CONNECTIONS_PER_IP=1000`). Each bot owns a rectangle and moves it
-20 times a second; each move carries its send time, so every other bot
-measures send → apply latency.
+`pnpm loadtest --clients 50 --rate 20 --seconds 15` (`MAX_CONNECTIONS_PER_IP=1000`).
+Each bot owns a rectangle and moves it 20 times a second; each move carries its
+send time, so every other bot measures send → apply latency. Run once with the
+in-memory store and once against Postgres 16.4 in Docker Desktop.
 
-| Metric                          | Target                 | Result               |
-| ------------------------------- | ---------------------- | -------------------- |
-| Moves per second (all bots)     | 1,000                  | 929                  |
-| Deliveries measured             | —                      | 1,114,680            |
-| Latency p50 / p95 / p99 / max   | p50 ≤ 30, p99 ≤ 100 ms | 40 / 57 / 66 / 82 ms |
-| Rejected batches                | 0                      | 0                    |
-| Ops still pending after the run | 0                      | 0                    |
-| Bots' own max event-loop lag    | —                      | 16 ms                |
+| Metric                          | Target                 | In memory            | Postgres             |
+| ------------------------------- | ---------------------- | -------------------- | -------------------- |
+| Moves per second (all bots)     | 1,000                  | 929                  | 920                  |
+| Deliveries measured             | —                      | 1,114,680            | 1,232,064            |
+| Latency p50 / p95 / p99 / max   | p50 ≤ 30, p99 ≤ 100 ms | 40 / 57 / 66 / 82 ms | 46 / 68 / 76 / 89 ms |
+| Group commit, mean              | —                      | —                    | 3.7 ms (380 commits) |
+| Rejected batches                | 0                      | 0                    | 0                    |
+| Ops still pending after the run | 0                      | 0                    | 0                    |
+| Bots' own max event-loop lag    | —                      | 16 ms                | 14 ms                |
 
-p99 meets its target; p50 is 10 ms over. The floor is the client's batching
-delay (one frame, 16 ms) plus the server's group-commit delay (5 ms).
-Postgres-backed runs and multi-document runs (PF-07) are still to do.
+p99 meets its target with Postgres too: durable acknowledgements cost about
+6 ms at the median. p50 is over target in both runs; the floor is the client's
+batching delay (one frame, 16 ms) plus the server's group-commit delay (5 ms).
+Multi-document runs (PF-07) are still to do.
+
+**Pitfall found while measuring:** with `DATABASE_URL` pointing at `localhost`,
+every parameterised query took ~44 ms and the p99 rose to 243 ms. On Windows,
+`localhost` resolves to IPv6 `::1` first, and Docker Desktop's IPv6 port
+forwarding delays multi-packet requests (Postgres's extended query protocol).
+`SELECT 1` was unaffected, which hid it. Use `127.0.0.1` locally.
 
 ## Convergence
 
@@ -55,5 +63,9 @@ CI runs 500 property-based cases per change and 10,000 seeds nightly.
 pnpm e2e                                   # prints the bench JSON
 PORT=8081 MAX_CONNECTIONS_PER_IP=1000 JOINS_PER_SECOND_PER_IP=1000 pnpm --filter @tandem/server dev
 pnpm loadtest --url http://localhost:8081 --clients 50 --rate 20 --seconds 15
+# Postgres: start one, then add DATABASE_URL to the server command above
+docker run -d --name tandem-pg -e POSTGRES_USER=tandem -e POSTGRES_PASSWORD=tandem -p 55432:5432 postgres:16.4-alpine
+#   DATABASE_URL=postgres://tandem:tandem@127.0.0.1:55432/tandem
+TEST_DATABASE_URL=postgres://tandem:tandem@127.0.0.1:55432/tandem pnpm vitest run apps/server/src/pg-store.test.ts
 pnpm sim --seeds 2000 --check
 ```
