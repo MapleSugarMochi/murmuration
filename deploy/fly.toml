@@ -1,5 +1,5 @@
 # Fly.io deployment, run from the repository root. See docs/deploy.md.
-app = 'tandem-xuzhou'
+app = 'murmuration-xuzhou'
 primary_region = 'lhr'
 
 [build]
@@ -9,7 +9,7 @@ primary_region = 'lhr'
   PORT = '8080'
   # Metrics stay on a private port that Fly scrapes; the public port has none.
   METRICS_PORT = '9091'
-  ALLOWED_ORIGINS = 'https://tandem-xuzhou.fly.dev'
+  ALLOWED_ORIGINS = 'https://murmuration-xuzhou.fly.dev'
 
 [http_service]
   internal_port = 8080

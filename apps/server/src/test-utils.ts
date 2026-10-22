@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import { SyncClient } from '@tandem/sync-client';
+import { SyncClient } from '@murmuration/sync-client';
 import { buildApp, type App } from './app.ts';
 import { loadConfig } from './config.ts';
 import { MemoryStore, type Store } from './store.ts';

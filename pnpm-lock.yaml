@@ -50,13 +50,13 @@ importers:
       '@fastify/static':
         specifier: 8.0.3
         version: 8.0.3
-      '@tandem/doc-model':
+      '@murmuration/doc-model':
         specifier: workspace:*
         version: link:../../packages/doc-model
-      '@tandem/protocol':
+      '@murmuration/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol
-      '@tandem/room':
+      '@murmuration/room':
         specifier: workspace:*
         version: link:../../packages/room
       fastify:
@@ -75,7 +75,7 @@ importers:
         specifier: 3.23.8
         version: 3.23.8
     devDependencies:
-      '@tandem/sync-client':
+      '@murmuration/sync-client':
         specifier: workspace:*
         version: link:../../packages/sync-client
       '@types/pg':
@@ -90,16 +90,16 @@ importers:
 
   apps/web:
     dependencies:
-      '@tandem/doc-model':
+      '@murmuration/doc-model':
         specifier: workspace:*
         version: link:../../packages/doc-model
-      '@tandem/protocol':
+      '@murmuration/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol
-      '@tandem/renderer':
+      '@murmuration/renderer':
         specifier: workspace:*
         version: link:../../packages/renderer
-      '@tandem/sync-client':
+      '@murmuration/sync-client':
         specifier: workspace:*
         version: link:../../packages/sync-client
       react:
@@ -138,7 +138,7 @@ importers:
 
   packages/protocol:
     dependencies:
-      '@tandem/doc-model':
+      '@murmuration/doc-model':
         specifier: workspace:*
         version: link:../doc-model
       zod:
@@ -147,34 +147,34 @@ importers:
 
   packages/renderer:
     dependencies:
-      '@tandem/doc-model':
+      '@murmuration/doc-model':
         specifier: workspace:*
         version: link:../doc-model
 
   packages/room:
     dependencies:
-      '@tandem/doc-model':
+      '@murmuration/doc-model':
         specifier: workspace:*
         version: link:../doc-model
-      '@tandem/protocol':
+      '@murmuration/protocol':
         specifier: workspace:*
         version: link:../protocol
 
   packages/sync-client:
     dependencies:
-      '@tandem/doc-model':
+      '@murmuration/doc-model':
         specifier: workspace:*
         version: link:../doc-model
-      '@tandem/protocol':
+      '@murmuration/protocol':
         specifier: workspace:*
         version: link:../protocol
 
   tools/loadtest:
     dependencies:
-      '@tandem/doc-model':
+      '@murmuration/doc-model':
         specifier: workspace:*
         version: link:../../packages/doc-model
-      '@tandem/sync-client':
+      '@murmuration/sync-client':
         specifier: workspace:*
         version: link:../../packages/sync-client
       ws:
@@ -187,16 +187,16 @@ importers:
 
   tools/sim:
     dependencies:
-      '@tandem/doc-model':
+      '@murmuration/doc-model':
         specifier: workspace:*
         version: link:../../packages/doc-model
-      '@tandem/protocol':
+      '@murmuration/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol
-      '@tandem/room':
+      '@murmuration/room':
         specifier: workspace:*
         version: link:../../packages/room
-      '@tandem/sync-client':
+      '@murmuration/sync-client':
         specifier: workspace:*
         version: link:../../packages/sync-client
       fast-check:

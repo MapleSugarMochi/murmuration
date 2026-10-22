@@ -7,8 +7,13 @@ import {
   type NodeId,
   type Op,
   type PropKey,
-} from '@tandem/doc-model';
-import { PROTOCOL_VERSION, encode, parseClientMessage, type ServerMessage } from '@tandem/protocol';
+} from '@murmuration/doc-model';
+import {
+  PROTOCOL_VERSION,
+  encode,
+  parseClientMessage,
+  type ServerMessage,
+} from '@murmuration/protocol';
 import {
   Room,
   RoomServer,
@@ -16,8 +21,8 @@ import {
   type Identity,
   type RoomConnection,
   type RoomSnapshot,
-} from '@tandem/room';
-import { SyncClient } from '@tandem/sync-client';
+} from '@murmuration/room';
+import { SyncClient } from '@murmuration/sync-client';
 
 /**
  * Convergence simulator. One in-process server (the real Room + RoomServer)

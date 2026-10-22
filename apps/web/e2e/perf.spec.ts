@@ -107,7 +107,7 @@ test('open a 10,000-shape document (PF-04)', async ({ browser, page }) => {
       flush(): void;
       pendingOpCount: number;
     };
-    const editor = (window as unknown as { __tandem: { sync: Sync } }).__tandem;
+    const editor = (window as unknown as { __murmuration: { sync: Sync } }).__murmuration;
     const side = 100;
     for (let chunk = 0; chunk < 20; chunk++) {
       const ops = [];
@@ -158,7 +158,8 @@ test('open a 10,000-shape document (PF-04)', async ({ browser, page }) => {
   await fresh.evaluate(() => new Promise((r) => requestAnimationFrame(() => r(null))));
   const openMs = Date.now() - t0;
   const count = await fresh.evaluate(
-    () => (window as unknown as { __tandem: { doc: { size: number } } }).__tandem.doc.size,
+    () =>
+      (window as unknown as { __murmuration: { doc: { size: number } } }).__murmuration.doc.size,
   );
   expect(count).toBe(10_000);
   console.log('perf', JSON.stringify({ pf: 'PF-04', shapes: count, openMs }));

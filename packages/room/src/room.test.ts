@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { defaultProps, type Op } from '@tandem/doc-model';
+import { defaultProps, type Op } from '@murmuration/doc-model';
 import { Room } from './room.ts';
 
 const create = (id: string): Op => ({ t: 'create', id, props: defaultProps('rect') });

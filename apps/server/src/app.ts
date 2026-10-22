@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import fastifyStatic from '@fastify/static';
 import { z } from 'zod';
-import { CLOSE } from '@tandem/room';
+import { CLOSE } from '@murmuration/room';
 import { hashToken, hmacIdentity, newDocId, newToken, roleForToken } from './auth.ts';
 import type { Config } from './config.ts';
 import { createMetrics, type Metrics } from './metrics.ts';

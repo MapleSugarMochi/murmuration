@@ -29,8 +29,8 @@ export default defineConfig({
   webServer: {
     // CI has pnpm on PATH (pnpm/action-setup); locally it comes via corepack.
     command: process.env.CI
-      ? 'pnpm build && pnpm --filter @tandem/server exec tsx src/main.ts'
-      : 'corepack pnpm@9.15.0 build && corepack pnpm@9.15.0 --filter @tandem/server exec tsx src/main.ts',
+      ? 'pnpm build && pnpm --filter @murmuration/server exec tsx src/main.ts'
+      : 'corepack pnpm@9.15.0 build && corepack pnpm@9.15.0 --filter @murmuration/server exec tsx src/main.ts',
     url: `http://localhost:${PORT}/healthz`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

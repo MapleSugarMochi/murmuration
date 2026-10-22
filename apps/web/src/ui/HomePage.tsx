@@ -34,7 +34,7 @@ export function HomePage() {
         <div style={{ marginBottom: 16 }}>
           <Icons.logo />
         </div>
-        <h1>Tandem</h1>
+        <h1>Murmuration</h1>
         <p>
           A multiplayer vector canvas. Draw together in real time — share a link and everyone sees
           each other&apos;s cursors and changes instantly.

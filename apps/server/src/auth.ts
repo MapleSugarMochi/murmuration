@@ -1,6 +1,6 @@
 import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
-import type { Role } from '@tandem/protocol';
-import type { Identity } from '@tandem/room';
+import type { Role } from '@murmuration/protocol';
+import type { Identity } from '@murmuration/room';
 import type { DocMeta } from './store.ts';
 
 /** 128-bit random token, URL-safe. */

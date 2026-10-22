@@ -1,5 +1,5 @@
-import type { NodeId } from '@tandem/doc-model';
-import type { Rect, Scene, Vec } from '@tandem/renderer';
+import type { NodeId } from '@murmuration/doc-model';
+import type { Rect, Scene, Vec } from '@murmuration/renderer';
 
 export interface Guide {
   axis: 'x' | 'y';

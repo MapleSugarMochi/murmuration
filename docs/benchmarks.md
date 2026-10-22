@@ -132,7 +132,7 @@ every change.
 invariants checked after every action) converged on all 2,000 seeds in 125 s.
 CI runs 500 property-based cases per change and 10,000 seeds nightly.
 
-On 2026-10-22, [CI run 16](https://github.com/MapleSugarMochi/tandem/actions/runs/39761378048)
+On 2026-10-22, [CI run 16](https://github.com/MapleSugarMochi/murmuration/actions/runs/39761378048)
 ran seeds 16,000–25,999 (400 actions each, invariants checked at the end of each
 run): all 10,000 converged, committing 299,889 batches in 91 s.
 
@@ -149,12 +149,12 @@ needs a browser; the E2E and `/bench` runs exercise it.
 ```bash
 pnpm e2e                                   # functional E2E, prints the bench JSON
 PERF=1 pnpm e2e perf                       # PF-01, -02, -04, -08
-docker run -d --name tandem-pg -e POSTGRES_USER=tandem -e POSTGRES_PASSWORD=tandem -p 55432:5432 postgres:16.4-alpine
-PORT=8081 DATABASE_URL=postgres://tandem:tandem@127.0.0.1:55432/tandem MAX_CONNECTIONS_PER_IP=5000 \
-  JOINS_PER_SECOND_PER_IP=5000 DOCS_PER_MINUTE_PER_IP=6000 pnpm --filter @tandem/server dev
+docker run -d --name murmuration-pg -e POSTGRES_USER=murmuration -e POSTGRES_PASSWORD=murmuration -p 55432:5432 postgres:16.4-alpine
+PORT=8081 DATABASE_URL=postgres://murmuration:murmuration@127.0.0.1:55432/murmuration MAX_CONNECTIONS_PER_IP=5000 \
+  JOINS_PER_SECOND_PER_IP=5000 DOCS_PER_MINUTE_PER_IP=6000 pnpm --filter @murmuration/server dev
 pnpm loadtest --url http://localhost:8081 --clients 50 --rate 20 --seconds 15              # PF-05
 pnpm loadtest --url http://localhost:8081 --clients 40 --rate 30 --seconds 20              # PF-06
 pnpm loadtest --url http://localhost:8081 --clients 2000 --docs 100 --rate 1 --seconds 20  # PF-07
-TEST_DATABASE_URL=postgres://tandem:tandem@127.0.0.1:55432/tandem pnpm coverage            # incl. SV-04
+TEST_DATABASE_URL=postgres://murmuration:murmuration@127.0.0.1:55432/murmuration pnpm coverage            # incl. SV-04
 pnpm sim --seeds 2000 --check
 ```

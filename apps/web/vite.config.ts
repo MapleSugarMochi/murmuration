@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-const api = process.env.TANDEM_API ?? 'http://localhost:8080';
+const api = process.env.MURMURATION_API ?? 'http://localhost:8080';
 
 export default defineConfig({
   plugins: [react()],

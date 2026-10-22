@@ -1,4 +1,4 @@
-import { ROOT_ID, type Document, type NodeId, type NodeProps } from '@tandem/doc-model';
+import { ROOT_ID, type Document, type NodeId, type NodeProps } from '@murmuration/doc-model';
 import {
   IDENTITY,
   apply,

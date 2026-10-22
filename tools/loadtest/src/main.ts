@@ -1,7 +1,7 @@
 import { parseArgs } from 'node:util';
 import WebSocket from 'ws';
-import { defaultProps } from '@tandem/doc-model';
-import { SyncClient } from '@tandem/sync-client';
+import { defaultProps } from '@murmuration/doc-model';
+import { SyncClient } from '@murmuration/sync-client';
 
 /**
  * Load test (PF-05 to PF-07). Spawns bot editors on one document; each bot
@@ -80,7 +80,7 @@ async function serverMetrics(): Promise<Record<string, number> | null> {
   try {
     const res = await fetch(`${base}/metrics`);
     const text = await res.text();
-    if (!res.ok || !text.includes('tandem_')) return null;
+    if (!res.ok || !text.includes('murmuration_')) return null;
     const out: Record<string, number> = {};
     for (const line of text.split('\n')) {
       const m = /^([a-z_]+) ([0-9.e+-]+)$/.exec(line);
@@ -177,9 +177,10 @@ async function main() {
     server:
       during && before
         ? {
-            connections: during.tandem_connections,
+            connections: during.murmuration_connections,
             committedOpsPerSecond: Math.round(
-              ((during.tandem_ops_applied_total ?? 0) - (before.tandem_ops_applied_total ?? 0)) /
+              ((during.murmuration_ops_applied_total ?? 0) -
+                (before.murmuration_ops_applied_total ?? 0)) /
                 elapsed,
             ),
             residentMemoryMB: Math.round((during.process_resident_memory_bytes ?? 0) / 2 ** 20),
@@ -187,12 +188,12 @@ async function main() {
             eventLoopLagP99Ms: Math.round((during.nodejs_eventloop_lag_p99_seconds ?? 0) * 1000),
             meanPersistMs:
               Math.round(
-                (((during.tandem_persist_seconds_sum ?? 0) -
-                  (before.tandem_persist_seconds_sum ?? 0)) /
+                (((during.murmuration_persist_seconds_sum ?? 0) -
+                  (before.murmuration_persist_seconds_sum ?? 0)) /
                   Math.max(
                     1,
-                    (during.tandem_persist_seconds_count ?? 0) -
-                      (before.tandem_persist_seconds_count ?? 0),
+                    (during.murmuration_persist_seconds_count ?? 0) -
+                      (before.murmuration_persist_seconds_count ?? 0),
                   )) *
                   10000,
               ) / 10,

@@ -8,7 +8,7 @@ import {
   type Op,
   type PropKey,
   type PropValue,
-} from '@tandem/doc-model';
+} from '@murmuration/doc-model';
 import {
   Scene,
   apply,
@@ -23,9 +23,9 @@ import {
   type Rect,
   type Vec,
   type View,
-} from '@tandem/renderer';
-import type { PeerInfo } from '@tandem/protocol';
-import type { SyncClient } from '@tandem/sync-client';
+} from '@murmuration/renderer';
+import type { PeerInfo } from '@murmuration/protocol';
+import type { SyncClient } from '@murmuration/sync-client';
 import { collect, parse, pasteOps, serialize, type ClipNode } from './clipboard.ts';
 import { drawOverlay } from './overlay.ts';
 import { snapMove, type Guide } from './snapping.ts';

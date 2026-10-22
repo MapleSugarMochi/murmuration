@@ -1,7 +1,7 @@
 import { spawn, type ChildProcess } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { afterEach, describe, expect, it } from 'vitest';
-import { defaultProps } from '@tandem/doc-model';
+import { defaultProps } from '@murmuration/doc-model';
 import { connectClient, waitFor, type TestClient } from './test-utils.ts';
 
 const url = process.env.TEST_DATABASE_URL;

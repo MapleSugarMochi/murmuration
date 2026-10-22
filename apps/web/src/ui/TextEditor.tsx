@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { cssColor } from '@tandem/renderer';
+import { cssColor } from '@murmuration/renderer';
 import type { Editor } from '../editor/editor.ts';
 
 /**

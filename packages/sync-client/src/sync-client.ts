@@ -1,4 +1,4 @@
-import { Document, inverseOf, type NodeId, type Op } from '@tandem/doc-model';
+import { Document, inverseOf, type NodeId, type Op } from '@murmuration/doc-model';
 import {
   EMPTY_PRESENCE,
   LIMITS,
@@ -13,7 +13,7 @@ import {
   type Role,
   type ServerMessage,
   type WelcomeMessage,
-} from '@tandem/protocol';
+} from '@murmuration/protocol';
 
 export type ConnectionStatus = 'connecting' | 'connected' | 'offline';
 export type ChangeSource = 'local' | 'remote';

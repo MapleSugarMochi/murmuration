@@ -6,7 +6,7 @@ import {
   type NodeId,
   type NodeProps,
   type Op,
-} from '@tandem/doc-model';
+} from '@murmuration/doc-model';
 import {
   IDENTITY,
   apply,
@@ -19,7 +19,7 @@ import {
   type Rect,
   type Scene,
   type Vec,
-} from '@tandem/renderer';
+} from '@murmuration/renderer';
 
 export type Handle = 'nw' | 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w';
 export const HANDLES: Handle[] = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];

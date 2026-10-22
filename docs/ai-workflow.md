@@ -1,6 +1,6 @@
 # How this was built with AI tools
 
-Tandem was built with Claude Code as a pair programmer, from a written
+Murmuration was built with Claude Code as a pair programmer, from a written
 requirements document with numbered requirements (ED-, CO-, SY-, SV-, PF-, SE-).
 This page records honestly what that looked like.
 

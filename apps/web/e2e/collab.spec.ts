@@ -30,7 +30,10 @@ async function open(
   name: string,
 ): Promise<Page> {
   const context = await browser.newContext();
-  await context.addInitScript((n) => localStorage.setItem('tandem.name', JSON.stringify(n)), name);
+  await context.addInitScript(
+    (n) => localStorage.setItem('murmuration.name', JSON.stringify(n)),
+    name,
+  );
   const page = await context.newPage();
   const token = role === 'edit' ? doc.editToken : doc.viewToken;
   await page.goto(`/d/${doc.id}#${role}=${token}`);
@@ -41,8 +44,10 @@ async function open(
 function nodes(page: Page): Promise<NodeSummary[]> {
   return page.evaluate(() => {
     const editor = (
-      window as unknown as { __tandem: { doc: { entries(): Iterable<[string, NodeSummary]> } } }
-    ).__tandem;
+      window as unknown as {
+        __murmuration: { doc: { entries(): Iterable<[string, NodeSummary]> } };
+      }
+    ).__murmuration;
     return [...editor.doc.entries()].map(([id, p]) => ({
       id,
       type: p.type,
@@ -80,8 +85,8 @@ test('two editors see each other’s shapes, cursors and presence', async ({ bro
   await bob.evaluate(
     (id) =>
       (
-        window as unknown as { __tandem: { setProps(v: object, ids: string[]): void } }
-      ).__tandem.setProps({ fill: '#ff0000ff' }, [id]),
+        window as unknown as { __murmuration: { setProps(v: object, ids: string[]): void } }
+      ).__murmuration.setProps({ fill: '#ff0000ff' }, [id]),
     rect!.id,
   );
   const canvas = ada.getByTestId('canvas');
@@ -110,8 +115,8 @@ test('edits made offline sync after reconnecting', async ({ browser, page }) => 
     ada.evaluate(
       (o) =>
         (
-          window as unknown as { __tandemConnection: { simulateOffline(o: boolean): void } }
-        ).__tandemConnection.simulateOffline(o),
+          window as unknown as { __murmurationConnection: { simulateOffline(o: boolean): void } }
+        ).__murmurationConnection.simulateOffline(o),
       offline,
     );
   await setOffline(true);
@@ -191,7 +196,7 @@ test('cursor chat near the edge reaches others without shifting the canvas', asy
   // Near the right edge, clear of the zoom badge in the bottom-right corner.
   await ada.mouse.move(box.x + box.width - 30, box.y + box.height - 80);
   const before = await ada.evaluate(() =>
-    JSON.stringify((window as unknown as { __tandem: { view: unknown } }).__tandem.view),
+    JSON.stringify((window as unknown as { __murmuration: { view: unknown } }).__murmuration.view),
   );
   await ada.keyboard.press('/');
   await ada.keyboard.type('Hello!');
@@ -199,16 +204,18 @@ test('cursor chat near the edge reaches others without shifting the canvas', asy
     bob.evaluate(() => {
       const editor = (
         window as unknown as {
-          __tandem: { sync: { peers: Map<string, { presence: { chat: string | null } }> } };
+          __murmuration: { sync: { peers: Map<string, { presence: { chat: string | null } }> } };
         }
-      ).__tandem;
+      ).__murmuration;
       return [...editor.sync.peers.values()][0]?.presence.chat ?? null;
     });
   await expect.poll(peerChat).toBe('Hello!');
   expect(await ada.locator('.canvas-wrap').evaluate((el) => el.scrollLeft + el.scrollTop)).toBe(0);
   expect(
     await ada.evaluate(() =>
-      JSON.stringify((window as unknown as { __tandem: { view: unknown } }).__tandem.view),
+      JSON.stringify(
+        (window as unknown as { __murmuration: { view: unknown } }).__murmuration.view,
+      ),
     ),
   ).toBe(before);
 });

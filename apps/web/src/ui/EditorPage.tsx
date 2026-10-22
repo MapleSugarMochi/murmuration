@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { SyncClient } from '@tandem/sync-client';
+import { SyncClient } from '@murmuration/sync-client';
 import { Editor } from '../editor/editor.ts';
 import { Connection } from '../lib/connection.ts';
 import { displayName, forgetDoc, rememberDoc, setDisplayName, tokenFromHash } from '../lib/api.ts';
@@ -71,7 +71,7 @@ export function EditorPage({ docId, hash }: { docId: string; hash: string }) {
     conn.start();
     setSession({ editor, conn });
     // Dev and e2e hook for inspecting the live editor.
-    Object.assign(window, { __tandem: editor, __tandemConnection: conn });
+    Object.assign(window, { __murmuration: editor, __murmurationConnection: conn });
     return () => {
       offReady();
       offRename();
@@ -100,7 +100,7 @@ export function EditorPage({ docId, hash }: { docId: string; hash: string }) {
         : fatal.code === 'not_found'
           ? 'Document not found'
           : fatal.code === 'protocol_version'
-            ? 'Tandem was updated'
+            ? 'Murmuration was updated'
             : 'You no longer have access';
     return (
       <div className="center-screen">

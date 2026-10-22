@@ -1,5 +1,5 @@
 {
-  "name": "@tandem/web",
+  "name": "@murmuration/web",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -11,10 +11,10 @@
     "e2e": "playwright test"
   },
   "dependencies": {
-    "@tandem/doc-model": "workspace:*",
-    "@tandem/protocol": "workspace:*",
-    "@tandem/renderer": "workspace:*",
-    "@tandem/sync-client": "workspace:*",
+    "@murmuration/doc-model": "workspace:*",
+    "@murmuration/protocol": "workspace:*",
+    "@murmuration/renderer": "workspace:*",
+    "@murmuration/sync-client": "workspace:*",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },

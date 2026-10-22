@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import fc from 'fast-check';
-import { Document, defaultProps, type Op } from '@tandem/doc-model';
+import { Document, defaultProps, type Op } from '@murmuration/doc-model';
 import { apply, intersects, type Rect } from './geometry.ts';
 import { QuadTree } from './quadtree.ts';
 import { Scene } from './scene.ts';

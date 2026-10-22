@@ -1,5 +1,5 @@
-import { apply, corners, pointsOf, isLineLike, FONT_FAMILY, type Vec } from '@tandem/renderer';
-import type { NodeId } from '@tandem/doc-model';
+import { apply, corners, pointsOf, isLineLike, FONT_FAMILY, type Vec } from '@murmuration/renderer';
+import type { NodeId } from '@murmuration/doc-model';
 import { HANDLES } from './transforms.ts';
 import type { Editor } from './editor.ts';
 

@@ -8,8 +8,8 @@ import {
   parseClientMessage,
   type ErrorCode,
   type ServerMessage,
-} from '@tandem/protocol';
-import { CLOSE, type RoomConnection } from '@tandem/room';
+} from '@murmuration/protocol';
+import { CLOSE, type RoomConnection } from '@murmuration/room';
 import { roleForToken } from './auth.ts';
 import type { Metrics } from './metrics.ts';
 import { KeyedLimiter, TokenBucket } from './rate-limit.ts';

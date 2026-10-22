@@ -1,6 +1,6 @@
 # Deploying
 
-Tandem ships as one Docker image (`deploy/Dockerfile`) that serves the API,
+Murmuration ships as one Docker image (`deploy/Dockerfile`) that serves the API,
 WebSockets and the web app, plus a Postgres database. These steps deploy it to
 Fly.io; all commands run from the repository root in PowerShell.
 
@@ -9,7 +9,7 @@ Fly.io; all commands run from the repository root in PowerShell.
 ```powershell
 winget install --id GitHub.cli
 gh auth login
-gh repo create tandem --public --source . --remote origin --push
+gh repo create murmuration --public --source . --remote origin --push
 ```
 
 The first push starts CI: lint, typecheck, unit and convergence tests, Postgres
@@ -29,17 +29,17 @@ Fly needs a payment method on the account even for small apps.
 Put your app name in `deploy/fly.toml` (`app` and `ALLOWED_ORIGINS`), then:
 
 ```powershell
-fly apps create tandem-<yourname> --org personal
+fly apps create murmuration-<yourname> --org personal
 ```
 
-The live instance is `tandem-xuzhou` at https://tandem-xuzhou.fly.dev.
+The live instance is `murmuration-xuzhou` at https://murmuration-xuzhou.fly.dev.
 
 ## 4. Create the database and secrets
 
 ```powershell
-fly postgres create --name tandem-<yourname>-db --region lhr --initial-cluster-size 1 --vm-size shared-cpu-1x --volume-size 1
-fly postgres attach tandem-<yourname>-db --app tandem-<yourname>
-fly secrets set --app tandem-<yourname> SESSION_SECRET=$(-join ((1..64) | % { '{0:x}' -f (Get-Random -Max 16) }))
+fly postgres create --name murmuration-<yourname>-db --region lhr --initial-cluster-size 1 --vm-size shared-cpu-1x --volume-size 1
+fly postgres attach murmuration-<yourname>-db --app murmuration-<yourname>
+fly secrets set --app murmuration-<yourname> SESSION_SECRET=$(-join ((1..64) | % { '{0:x}' -f (Get-Random -Max 16) }))
 ```
 
 `attach` creates a database user for the app and sets `DATABASE_URL`; the
@@ -50,7 +50,7 @@ server runs its migrations on start.
 
 ```powershell
 fly deploy . --config deploy/fly.toml --dockerfile deploy/Dockerfile --remote-only --ha=false
-fly open --app tandem-<yourname>
+fly open --app murmuration-<yourname>
 ```
 
 Check it: `/healthz` and `/readyz` should return `{"ok":true}`, and two
@@ -62,6 +62,6 @@ browser windows on one document link should see each other's cursors.
   and snapshots every room on `SIGTERM`, and clients reconnect and resend.
 - Metrics are on the private port 9091, which Fly scrapes; view them in the
   Fly dashboard's Grafana.
-- `fly logs --app tandem-<yourname>` shows structured JSON logs.
+- `fly logs --app murmuration-<yourname>` shows structured JSON logs.
 - Rotate the session secret only with care: it invalidates resume tokens, so
   open tabs rejoin as new clients.

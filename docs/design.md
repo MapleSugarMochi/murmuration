@@ -1,6 +1,6 @@
 # Sync design
 
-Tandem uses a server-authoritative protocol with per-property last-writer-wins
+Murmuration uses a server-authoritative protocol with per-property last-writer-wins
 (LWW). This document explains the model, why it was chosen over the
 alternatives, and what it costs.
 
@@ -119,11 +119,11 @@ a central server is required anyway for access control and persistence.
 - **Same:** server-authoritative ordering, per-property LWW, fractional indexing
   for order, client-generated ids, and the rule that a client keeps showing its
   own unacknowledged value.
-- **Different:** Tandem's client keeps a full confirmed copy and replays pending
+- **Different:** Murmuration's client keeps a full confirmed copy and replays pending
   batches, where Figma tracks unacknowledged properties individually. Replay is
   simpler to verify and cheap at this scale (one map copy per remote batch while
   edits are pending).
-- **Same:** a reparent that would form a cycle is resolved on the server; Tandem
+- **Same:** a reparent that would form a cycle is resolved on the server; Murmuration
   drops the later one, and the client's replay drops it locally too.
 
 ## Known limitations

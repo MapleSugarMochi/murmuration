@@ -1,5 +1,5 @@
 import pg from 'pg';
-import type { CommittedBatch, RoomSnapshot } from '@tandem/room';
+import type { CommittedBatch, RoomSnapshot } from '@murmuration/room';
 import type { DocMeta, Store, StoredRoom } from './store.ts';
 
 /**

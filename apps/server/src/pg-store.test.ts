@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { randomBytes } from 'node:crypto';
-import { defaultProps } from '@tandem/doc-model';
-import { Room } from '@tandem/room';
+import { defaultProps } from '@murmuration/doc-model';
+import { Room } from '@murmuration/room';
 import { PgStore } from './pg-store.ts';
 import { connectClient, startTestServer, waitFor } from './test-utils.ts';
 

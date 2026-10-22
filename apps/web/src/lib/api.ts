@@ -61,10 +61,16 @@ export function tokenFromHash(hash: string): { role: 'edit' | 'view'; token: str
   return null;
 }
 
-const RECENT_KEY = 'tandem.recent';
+const RECENT_KEY = 'murmuration.recent';
+/** Keys from before the project was renamed (from Tandem), read as a fallback. */
+const LEGACY_RECENT_KEY = 'tandem.recent';
+const LEGACY_NAME_KEY = 'tandem.name';
 
 export function recentDocs(): RecentDoc[] {
-  const list = storage.get<RecentDoc[]>(RECENT_KEY, []);
+  const list = storage.get<RecentDoc[]>(
+    RECENT_KEY,
+    storage.get<RecentDoc[]>(LEGACY_RECENT_KEY, []),
+  );
   return Array.isArray(list) ? list.sort((a, b) => b.openedAt - a.openedAt) : [];
 }
 
@@ -81,10 +87,10 @@ export function forgetDoc(id: string): void {
   );
 }
 
-const NAME_KEY = 'tandem.name';
+const NAME_KEY = 'murmuration.name';
 
 export function displayName(): string {
-  return storage.get<string>(NAME_KEY, '');
+  return storage.get<string>(NAME_KEY, storage.get<string>(LEGACY_NAME_KEY, ''));
 }
 
 export function setDisplayName(name: string): void {

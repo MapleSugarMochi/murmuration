@@ -8,11 +8,13 @@ import {
   type NodeId,
   type NodeProps,
   type Op,
-} from '@tandem/doc-model';
-import { apply, rotationOf, type Scene } from '@tandem/renderer';
+} from '@murmuration/doc-model';
+import { apply, rotationOf, type Scene } from '@murmuration/renderer';
 import { topLevel, worldOf } from './transforms.ts';
 
-const PREFIX = 'tandem/v1:';
+const PREFIX = 'murmuration/v1:';
+/** Still accepted when pasting content copied before the rename. */
+const LEGACY_PREFIX = 'tandem/v1:';
 
 export interface ClipNode {
   id: NodeId;
@@ -58,8 +60,8 @@ export function collect(doc: Document, scene: Scene, ids: Iterable<NodeId>): Cli
 
 /** Parses clipboard text; anything unexpected yields null. */
 export function parse(text: string): ClipNode[] | null {
-  if (!text.startsWith(PREFIX)) return null;
-  return parseNodes(text.slice(PREFIX.length));
+  const prefix = [PREFIX, LEGACY_PREFIX].find((p) => text.startsWith(p));
+  return prefix ? parseNodes(text.slice(prefix.length)) : null;
 }
 
 /** Parses `{ nodes: [...] }` JSON (clipboard or a JSON export). */

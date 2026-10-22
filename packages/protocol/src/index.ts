@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { NodeId, NodeProps, Op } from '@tandem/doc-model';
+import type { NodeId, NodeProps, Op } from '@murmuration/doc-model';
 
 /** Bump on any incompatible change to the messages below. */
 export const PROTOCOL_VERSION = 1;

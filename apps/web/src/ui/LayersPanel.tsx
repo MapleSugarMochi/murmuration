@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import { ROOT_ID, keyBetweenJittered, type NodeId } from '@tandem/doc-model';
+import { ROOT_ID, keyBetweenJittered, type NodeId } from '@murmuration/doc-model';
 import type { Editor } from '../editor/editor.ts';
 import { placeOps, worldOf } from '../editor/transforms.ts';
 import { Icons, type IconName } from './icons.tsx';

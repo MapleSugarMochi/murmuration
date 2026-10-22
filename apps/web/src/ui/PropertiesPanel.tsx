@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
-import { normalizeRotation, type NodeProps, type PropKey, type PropValue } from '@tandem/doc-model';
-import { cssColor } from '@tandem/renderer';
+import {
+  normalizeRotation,
+  type NodeProps,
+  type PropKey,
+  type PropValue,
+} from '@murmuration/doc-model';
+import { cssColor } from '@murmuration/renderer';
 import type { Editor } from '../editor/editor.ts';
 import { r2 } from '../editor/transforms.ts';
 import { evaluate } from './expr.ts';

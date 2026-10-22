@@ -1,4 +1,4 @@
-import { ROOT_ID, type Document, type NodeId, type NodeProps } from '@tandem/doc-model';
+import { ROOT_ID, type Document, type NodeId, type NodeProps } from '@murmuration/doc-model';
 import { apply, intersects, multiply, type Mat, type Rect } from './geometry.ts';
 import { pointsOf, type Scene } from './scene.ts';
 

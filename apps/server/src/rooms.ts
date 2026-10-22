@@ -1,5 +1,5 @@
 import type { FastifyBaseLogger } from 'fastify';
-import { Room, RoomServer, CLOSE, type CommittedBatch, type Identity } from '@tandem/room';
+import { Room, RoomServer, CLOSE, type CommittedBatch, type Identity } from '@murmuration/room';
 import type { Metrics } from './metrics.ts';
 import type { Store } from './store.ts';
 

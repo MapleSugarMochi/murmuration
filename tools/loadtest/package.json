@@ -1,5 +1,5 @@
 {
-  "name": "@tandem/loadtest",
+  "name": "@murmuration/loadtest",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -8,8 +8,8 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@tandem/doc-model": "workspace:*",
-    "@tandem/sync-client": "workspace:*",
+    "@murmuration/doc-model": "workspace:*",
+    "@murmuration/sync-client": "workspace:*",
     "ws": "8.18.0"
   },
   "devDependencies": {

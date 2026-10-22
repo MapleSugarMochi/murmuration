@@ -1,5 +1,5 @@
 {
-  "name": "@tandem/sim",
+  "name": "@murmuration/sim",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -8,10 +8,10 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@tandem/doc-model": "workspace:*",
-    "@tandem/protocol": "workspace:*",
-    "@tandem/room": "workspace:*",
-    "@tandem/sync-client": "workspace:*",
+    "@murmuration/doc-model": "workspace:*",
+    "@murmuration/protocol": "workspace:*",
+    "@murmuration/room": "workspace:*",
+    "@murmuration/sync-client": "workspace:*",
     "fast-check": "3.23.1"
   }
 }

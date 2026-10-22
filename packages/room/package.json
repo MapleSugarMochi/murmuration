@@ -1,5 +1,5 @@
 {
-  "name": "@tandem/room",
+  "name": "@murmuration/room",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -10,7 +10,7 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@tandem/doc-model": "workspace:*",
-    "@tandem/protocol": "workspace:*"
+    "@murmuration/doc-model": "workspace:*",
+    "@murmuration/protocol": "workspace:*"
   }
 }

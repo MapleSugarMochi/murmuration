@@ -3,15 +3,15 @@ services:
   postgres:
     image: postgres:16.4-alpine
     environment:
-      POSTGRES_USER: tandem
-      POSTGRES_PASSWORD: tandem
-      POSTGRES_DB: tandem
+      POSTGRES_USER: murmuration
+      POSTGRES_PASSWORD: murmuration
+      POSTGRES_DB: murmuration
     ports:
       - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U tandem']
+      test: ['CMD-SHELL', 'pg_isready -U murmuration']
       interval: 2s
       timeout: 3s
       retries: 20
@@ -21,7 +21,7 @@ services:
       context: ..
       dockerfile: deploy/Dockerfile
     environment:
-      DATABASE_URL: postgres://tandem:tandem@postgres:5432/tandem
+      DATABASE_URL: postgres://murmuration:murmuration@postgres:5432/murmuration
       SESSION_SECRET: ${SESSION_SECRET:-local-development-secret-change-me-please}
     ports:
       - '8080:8080'

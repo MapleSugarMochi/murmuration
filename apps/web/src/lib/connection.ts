@@ -1,5 +1,5 @@
-import type { ErrorCode } from '@tandem/protocol';
-import type { SyncClient } from '@tandem/sync-client';
+import type { ErrorCode } from '@murmuration/protocol';
+import type { SyncClient } from '@murmuration/sync-client';
 
 /** Errors after which reconnecting cannot help. */
 const FATAL: ReadonlySet<ErrorCode> = new Set([

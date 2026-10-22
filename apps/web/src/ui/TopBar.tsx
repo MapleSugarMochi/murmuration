@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { ROOT_ID } from '@tandem/doc-model';
-import { renderToCanvas } from '@tandem/renderer';
+import { ROOT_ID } from '@murmuration/doc-model';
+import { renderToCanvas } from '@murmuration/renderer';
 import { navigate } from '../App.tsx';
 import { parseNodes } from '../editor/clipboard.ts';
 import type { Editor, Tool } from '../editor/editor.ts';
@@ -76,19 +76,22 @@ export function TopBar({
     const canvas = renderToCanvas(editor.doc, editor.scene, ids, scale, null);
     if (!canvas) return editor.toast('Nothing to export');
     canvas.toBlob(
-      (blob) => blob && download(`${sync.docName || 'tandem'}@${scale}x.png`, blob),
+      (blob) => blob && download(`${sync.docName || 'murmuration'}@${scale}x.png`, blob),
       'image/png',
     );
   };
 
   const exportJson = () => {
     const json = JSON.stringify({ version: 1, name: sync.docName, nodes: editor.exportNodes() });
-    download(`${sync.docName || 'tandem'}.json`, new Blob([json], { type: 'application/json' }));
+    download(
+      `${sync.docName || 'murmuration'}.json`,
+      new Blob([json], { type: 'application/json' }),
+    );
   };
 
   const importJson = async (file: File) => {
     const nodes = parseNodes(await file.text());
-    if (!nodes) return editor.toast('That file is not a Tandem export', 'error');
+    if (!nodes) return editor.toast('That file is not a Murmuration export', 'error');
     editor.importNodes(nodes);
   };
 

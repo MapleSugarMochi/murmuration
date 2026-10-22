@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import WebSocket from 'ws';
-import { defaultProps, type Op } from '@tandem/doc-model';
-import { PROTOCOL_VERSION, encode, type ServerMessage } from '@tandem/protocol';
+import { defaultProps, type Op } from '@murmuration/doc-model';
+import { PROTOCOL_VERSION, encode, type ServerMessage } from '@murmuration/protocol';
 import { MemoryStore } from './store.ts';
 import {
   connectClient,
@@ -71,7 +71,9 @@ describe('HTTP API', () => {
     const { server } = await setup();
     expect((await fetch(`${server.url}/healthz`)).status).toBe(200);
     expect((await fetch(`${server.url}/readyz`)).status).toBe(200);
-    expect(await (await fetch(`${server.url}/metrics`)).text()).toContain('tandem_connections');
+    expect(await (await fetch(`${server.url}/metrics`)).text()).toContain(
+      'murmuration_connections',
+    );
   });
 });
 

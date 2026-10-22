@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Document, defaultProps, keysBetween, type NodeType } from '@tandem/doc-model';
-import { Scene, drawScene, type View } from '@tandem/renderer';
+import { Document, defaultProps, keysBetween, type NodeType } from '@murmuration/doc-model';
+import { Scene, drawScene, type View } from '@murmuration/renderer';
 
 export interface BenchResult {
   shapes: number;

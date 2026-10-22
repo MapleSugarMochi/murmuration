@@ -1,5 +1,5 @@
 {
-  "name": "tandem",
+  "name": "murmuration",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@9.15.0",
@@ -7,7 +7,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev": "pnpm --parallel --filter @tandem/server --filter @tandem/web dev",
+    "dev": "pnpm --parallel --filter @murmuration/server --filter @murmuration/web dev",
     "build": "pnpm -r build",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -16,9 +16,9 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "sim": "pnpm --filter @tandem/sim start",
-    "loadtest": "pnpm --filter @tandem/loadtest start",
-    "e2e": "pnpm --filter @tandem/web e2e"
+    "sim": "pnpm --filter @murmuration/sim start",
+    "loadtest": "pnpm --filter @murmuration/loadtest start",
+    "e2e": "pnpm --filter @murmuration/web e2e"
   },
   "devDependencies": {
     "@eslint/js": "9.15.0",

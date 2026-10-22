@@ -1,4 +1,4 @@
-import type { NodeProps } from '@tandem/doc-model';
+import type { NodeProps } from '@murmuration/doc-model';
 
 export interface Vec {
   x: number;

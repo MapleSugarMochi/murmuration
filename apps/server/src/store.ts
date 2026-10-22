@@ -1,4 +1,4 @@
-import type { CommittedBatch, RoomSnapshot } from '@tandem/room';
+import type { CommittedBatch, RoomSnapshot } from '@murmuration/room';
 
 export interface DocMeta {
   id: string;

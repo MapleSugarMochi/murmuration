@@ -18,9 +18,9 @@ COPY tools/sim/package.json tools/sim/
 COPY tools/loadtest/package.json tools/loadtest/
 RUN pnpm install --frozen-lockfile
 COPY . .
-RUN pnpm --filter @tandem/web build && pnpm --filter @tandem/server build
+RUN pnpm --filter @murmuration/web build && pnpm --filter @murmuration/server build
 # Production dependencies of the server only, as a flat node_modules.
-RUN pnpm --filter @tandem/server deploy --prod /out
+RUN pnpm --filter @murmuration/server deploy --prod /out
 
 FROM node:22.11-alpine
 ENV NODE_ENV=production PORT=8080 PUBLIC_DIR=/app/public

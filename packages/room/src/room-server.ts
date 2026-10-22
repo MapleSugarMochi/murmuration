@@ -10,7 +10,7 @@ import {
   type Role,
   type ServerMessage,
   type WelcomeMessage,
-} from '@tandem/protocol';
+} from '@murmuration/protocol';
 import type { CommittedBatch, Room } from './room.ts';
 
 export interface RoomConnection {

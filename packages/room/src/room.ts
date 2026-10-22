@@ -1,4 +1,4 @@
-import { Document, type NodeId, type NodeProps, type Op } from '@tandem/doc-model';
+import { Document, type NodeId, type NodeProps, type Op } from '@murmuration/doc-model';
 
 /** A batch the room accepted, in the order it was applied. */
 export interface CommittedBatch {

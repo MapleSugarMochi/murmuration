@@ -22,7 +22,10 @@ const OUT = fileURLToPath(new URL('../../../docs/demo.gif', import.meta.url));
 
 async function person(browser: Browser, url: string, name: string): Promise<Page> {
   const context = await browser.newContext({ viewport: VIEW, deviceScaleFactor: 1 });
-  await context.addInitScript((n) => localStorage.setItem('tandem.name', JSON.stringify(n)), name);
+  await context.addInitScript(
+    (n) => localStorage.setItem('murmuration.name', JSON.stringify(n)),
+    name,
+  );
   const page = await context.newPage();
   await page.goto(url);
   await expect(page.getByTestId('status')).toContainText('Saved');
