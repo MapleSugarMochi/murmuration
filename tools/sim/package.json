@@ -12,6 +12,6 @@
     "@murmuration/protocol": "workspace:*",
     "@murmuration/room": "workspace:*",
     "@murmuration/sync-client": "workspace:*",
-    "fast-check": "3.23.1"
+    "fast-check": "3.23.2"
   }
 }
