@@ -25,6 +25,6 @@
     "@murmuration/sync-client": "workspace:*",
     "@types/pg": "8.11.10",
     "@types/ws": "8.5.13",
-    "esbuild": "0.24.0"
+    "esbuild": "0.28.2"
   }
 }
