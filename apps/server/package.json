@@ -11,20 +11,20 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@fastify/static": "8.0.3",
+    "@fastify/static": "8.3.0",
     "@murmuration/doc-model": "workspace:*",
     "@murmuration/protocol": "workspace:*",
     "@murmuration/room": "workspace:*",
-    "fastify": "5.1.0",
-    "pg": "8.13.1",
+    "fastify": "5.12.7",
+    "pg": "8.23.1",
     "prom-client": "15.1.3",
-    "ws": "8.18.0",
-    "zod": "3.23.8"
+    "ws": "8.22.0",
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@murmuration/sync-client": "workspace:*",
-    "@types/pg": "8.11.10",
-    "@types/ws": "8.5.13",
+    "@types/pg": "8.23.1",
+    "@types/ws": "8.18.2",
     "esbuild": "0.24.0"
   }
 }
